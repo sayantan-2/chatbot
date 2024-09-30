@@ -72,7 +72,7 @@ export default function Home() {
           Send
         </button>
       </form>
-      <div className={styles.watermark}>Made by Sayantan</div>
+      <div className={styles.watermark}>Sayantan</div>
     </main>
   );
 }
