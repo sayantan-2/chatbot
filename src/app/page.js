@@ -72,7 +72,9 @@ export default function Home() {
           Send
         </button>
       </form>
-      <div className={styles.watermark}>Sayantan</div>
+      <div className={styles.watermark}>
+        <a href="https://github.com/sayantan-2/chatbot" target="_blank" rel="noopener noreferrer">Sayantan</a>
+      </div>
     </main>
   );
 }
