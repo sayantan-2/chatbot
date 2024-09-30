@@ -138,3 +138,20 @@
   color: #fbfbfb;
   opacity: 0.7;
 }
+/* Watermark at the top left */
+.topLeftWatermark {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  font-size: 1rem;
+  color: #ffffff;
+  opacity: 0.7;
+  background-color: rgba(
+    0,
+    0,
+    0,
+    0.5
+  ); /* Optional: Add a semi-transparent background */
+  padding: 0.2rem 0.5rem; /* Optional: Add some padding */
+  border-radius: 0.5rem; /* Optional: Round the corners */
+}

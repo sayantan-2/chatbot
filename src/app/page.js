@@ -42,22 +42,15 @@ export default function Home() {
     }
   };
 
-  const handleNewChat = () => {
-    setMessages([]);
-    setInput('');
-  };
-
   return (
     <main className={styles.main}>
-      {/* Header with title and New Chat button */}
+      <div className={styles.topLeftWatermark}>Version Beta: Under Development</div>
       <div className={styles.header}>
-        <h1 className={styles.title}>Groq Chatbot</h1>
-        <button onClick={handleNewChat} className={styles.newChatButton}>
-          New Chat
+        <h1 className={styles.title}>Chatbot</h1>
+        <button className={styles.newChatButton} onClick={() => setMessages([])}>
+          Start New Chat
         </button>
       </div>
-
-      {/* Chat window */}
       <div className={styles.chatWindow}>
         {messages.map((msg, index) => (
           <div key={index} className={`${styles.message} ${msg.role === 'user' ? styles.userMessage : styles.assistantMessage}`}>
@@ -66,8 +59,6 @@ export default function Home() {
         ))}
         {isLoading && <div className={styles.loading}>Assistant is typing...</div>}
       </div>
-
-      {/* Input form */}
       <form onSubmit={handleSubmit} className={styles.inputForm}>
         <input
           type="text"
@@ -81,9 +72,7 @@ export default function Home() {
           Send
         </button>
       </form>
-
-      {/* Watermark */}
-      <div className={styles.watermark}> - by Sayantan</div>
+      <div className={styles.watermark}>Made by Sayantan</div>
     </main>
   );
 }
