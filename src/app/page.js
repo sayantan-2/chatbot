@@ -44,7 +44,7 @@ export default function Home() {
 
   return (
     <main className={styles.main}>
-      <div className={styles.topLeftWatermark}>Version Beta: Under Development</div>
+      <div className={styles.topLeftWatermark}>Version: 0.1.0 (Beta)</div>
       <div className={styles.header}>
         <h1 className={styles.title}>Chatbot</h1>
         <button className={styles.newChatButton} onClick={() => setMessages([])}>
