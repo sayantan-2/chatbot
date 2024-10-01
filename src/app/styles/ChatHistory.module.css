@@ -1,14 +1,11 @@
-/* ChatHistory.module.css */
+/* // ChatHistory.module.css */
 .sidebar {
-  width: 250px;
-  background-color: var(--chat-bg);
-  padding: 1rem;
-  overflow-y: auto;
-  border-right: 1px solid var(--primary-color);
   display: flex;
   flex-direction: column;
+  padding: 1rem;
+  height: 100%;
+  overflow-y: auto;
 }
-
 .newChatButton {
   background-color: var(--secondary-color);
   color: var(--background);
@@ -22,9 +19,14 @@
   margin-bottom: 1rem;
 }
 
-.newChatButton:hover {
-  opacity: 0.9;
-  transform: translateY(-2px);
+.providerDropdown {
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  border: 1px solid var(--primary-color);
+  border-radius: 0.5rem;
+  font-size: 0.9rem;
+  background-color: var(--background);
+  color: var(--foreground);
 }
 
 .chatHistory {
@@ -52,13 +54,6 @@
   background-color: var(--message-bg-user);
 }
 
-.chatHistoryItem span {
-  flex-grow: 1;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
 .deleteButton {
   background: none;
   border: none;
@@ -70,33 +65,4 @@
 
 .deleteButton:hover {
   opacity: 1;
-}
-
-@media (max-width: 768px) {
-  .sidebar {
-    width: 100%;
-    border-right: none;
-    border-bottom: 1px solid var(--primary-color);
-    max-height: 200px;
-    flex-direction: row;
-    align-items: flex-start;
-  }
-
-  .newChatButton {
-    margin-bottom: 0;
-    margin-right: 1rem;
-  }
-
-  .chatHistory {
-    display: flex;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    overflow-y: hidden;
-  }
-
-  .chatHistoryItem {
-    flex: 0 0 auto;
-    margin-right: 0.5rem;
-    white-space: nowrap;
-  }
 }

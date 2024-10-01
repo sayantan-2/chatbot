@@ -72,6 +72,10 @@ export default function Home() {
     );
   };
 
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+
   const generateSummary = (messages) => {
     const firstUserMessage = messages.find(msg => msg.role === 'user');
     if (firstUserMessage) {
@@ -164,38 +168,33 @@ export default function Home() {
     }
   };
 
+  const handleSwitchChat = (chatId) => {
+    switchChat(chatId);
+    setIsSidebarOpen(false); // Close sidebar on mobile after selecting a chat
+  };
+
   return (
     <div className={styles.container}>
-      <header className={styles.header}>
-        <Header />
-      </header>
-      <button
-        className={styles.toggleSidebar}
-        onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-      >
-        ☰
-      </button>
+      <Header toggleSidebar={toggleSidebar} />
       <div className={styles.chatContainer}>
         <aside className={`${styles.sidebar} ${isSidebarOpen ? styles.sidebarOpen : ''}`}>
           <ChatHistory
             chatHistory={chatHistory}
-            switchChat={switchChat}
+            switchChat={handleSwitchChat}
             currentChatId={currentChatId}
             startNewChat={startNewChat}
             deleteChat={deleteChat}
+            provider={provider}
+            setProvider={setProvider}
           />
         </aside>
         <main className={styles.mainChat}>
-          <div className={styles.chatWindow}>
-            <ChatWindow messages={messages} isLoading={isLoading} />
-          </div>
+          <ChatWindow messages={messages} isLoading={isLoading} />
           <InputForm
             handleSubmit={handleSubmit}
             input={input}
             setInput={setInput}
             isLoading={isLoading}
-            provider={provider}
-            setProvider={setProvider}
           />
         </main>
       </div>
