@@ -13,34 +13,62 @@ export default function Home() {
     if (!input.trim() || isLoading) return;
 
     setIsLoading(true);
+
+    // Add the user's message to the chat
     const userMessage = { role: 'user', content: input };
-    setMessages(prev => [...prev, userMessage]);
+    setMessages((prevMessages) => [...prevMessages, userMessage]);
     setInput('');
 
     try {
-      const res = await fetch('/api/chat', {
+      // Make the API call with the user's message and chat history
+      const response = await fetch('/api/chat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ message: input }),
+        body: JSON.stringify({
+          message: input,
+          history: [...messages, userMessage], // Include all messages, including the user's new message
+        }),
       });
 
-      if (!res.ok) {
-        throw new Error(`HTTP error! status: ${res.status}`);
+      if (!response.body) {
+        throw new Error('No stream found');
       }
 
-      const data = await res.json();
-      const assistantMessage = { role: 'assistant', content: data.response };
-      setMessages(prev => [...prev, assistantMessage]);
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let receivedText = '';
+
+      // Add an empty assistant message first so it can be updated later with the streamed content
+      const assistantMessage = { role: 'assistant', content: '' };
+      setMessages((prevMessages) => [...prevMessages, assistantMessage]);
+
+      // Read the response stream chunk by chunk
+      while (true) {
+        const { value, done } = await reader.read();
+        if (done) break;
+
+        // Decode the incoming chunk of data
+        receivedText += decoder.decode(value, { stream: true });
+
+        // Update only the assistant's last message without removing previous messages
+        setMessages((prevMessages) => {
+          const updatedMessages = [...prevMessages];
+          updatedMessages[updatedMessages.length - 1] = { role: 'assistant', content: receivedText }; // Update the last message (assistant's)
+          return updatedMessages;
+        });
+      }
+
     } catch (error) {
       console.error('Error:', error);
       const errorMessage = { role: 'assistant', content: 'An error occurred while fetching the response.' };
-      setMessages(prev => [...prev, errorMessage]);
+      setMessages((prevMessages) => [...prevMessages, errorMessage]);
     } finally {
       setIsLoading(false);
     }
   };
+
 
   return (
     <main className={styles.main}>
