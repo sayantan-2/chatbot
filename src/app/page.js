@@ -15,6 +15,7 @@ export default function Home() {
   const [chatHistory, setChatHistory] = useState([]);
   const [currentChatId, setCurrentChatId] = useState(null);
   const [provider, setProvider] = useState('groq');
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   useEffect(() => {
     const savedHistory = localStorage.getItem('chatHistory');
@@ -165,17 +166,29 @@ export default function Home() {
 
   return (
     <div className={styles.container}>
-      <Header startNewChat={startNewChat} />
+      <header className={styles.header}>
+        <Header />
+      </header>
+      <button
+        className={styles.toggleSidebar}
+        onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+      >
+        ☰
+      </button>
       <div className={styles.chatContainer}>
-        <ChatHistory
-          chatHistory={chatHistory}
-          switchChat={switchChat}
-          currentChatId={currentChatId}
-          startNewChat={startNewChat}
-          deleteChat={deleteChat}
-        />
+        <aside className={`${styles.sidebar} ${isSidebarOpen ? styles.sidebarOpen : ''}`}>
+          <ChatHistory
+            chatHistory={chatHistory}
+            switchChat={switchChat}
+            currentChatId={currentChatId}
+            startNewChat={startNewChat}
+            deleteChat={deleteChat}
+          />
+        </aside>
         <main className={styles.mainChat}>
-          <ChatWindow messages={messages} isLoading={isLoading} />
+          <div className={styles.chatWindow}>
+            <ChatWindow messages={messages} isLoading={isLoading} />
+          </div>
           <InputForm
             handleSubmit={handleSubmit}
             input={input}
