@@ -1,4 +1,5 @@
 /* InputForm.module.css */
+
 .inputForm {
   display: flex;
   padding: 1rem;
@@ -40,4 +41,11 @@
   font-size: 1rem;
   background-color: var(--background);
   color: var(--foreground);
+}
+
+.providerDropdown option:disabled {
+  background-color: var(--disabled-bg);
+  color: var(--disabled-foreground);
+  cursor: not-allowed;
+  font-style: italic; /* Optional: You can italicize the disabled options */
 }

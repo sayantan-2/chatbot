@@ -26,7 +26,7 @@ html {
     font-size: 18px; /* Adjust for larger devices */
   }
   @media (min-width: 1200px) {
-    font-size: 20px;
+    font-size: 16px;
   }
 }
 

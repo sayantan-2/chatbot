@@ -19,9 +19,15 @@ export default function InputForm({
         disabled={isLoading}
       >
         <option value="groq">Groq</option>
-        <option value="gemini">Gemini</option>
-        <option value="openai">OpenAI</option>
-        <option value="anthropic">Anthropic</option>
+        <option value="gemini" disabled>
+          🔒 Gemini
+        </option>
+        <option value="openai" disabled>
+          🔒 OpenAI
+        </option>
+        <option value="anthropic" disabled>
+          🔒 Anthropic
+        </option>
       </select>
       <input
         type="text"
