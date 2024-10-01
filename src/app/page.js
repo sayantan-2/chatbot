@@ -20,19 +20,30 @@ export default function Home() {
     const savedHistory = localStorage.getItem('chatHistory');
     const savedCurrentChatId = localStorage.getItem('currentChatId');
     if (savedHistory) {
-      setChatHistory(JSON.parse(savedHistory));
-    }
-    if (savedCurrentChatId) {
-      setCurrentChatId(savedCurrentChatId);
-      const selectedChat = JSON.parse(savedHistory).find(chat => chat.id === savedCurrentChatId);
-      if (selectedChat) {
-        setMessages(selectedChat.messages);
+      const parsedHistory = JSON.parse(savedHistory);
+      setChatHistory(parsedHistory);
+      if (savedCurrentChatId) {
+        setCurrentChatId(savedCurrentChatId);
+        const selectedChat = parsedHistory.find(chat => chat.id === savedCurrentChatId);
+        if (selectedChat) {
+          setMessages(selectedChat.messages);
+        }
+      } else if (parsedHistory.length > 0) {
+        // If no current chat id is saved, default to the most recent chat
+        const mostRecentChat = parsedHistory[parsedHistory.length - 1];
+        setCurrentChatId(mostRecentChat.id);
+        setMessages(mostRecentChat.messages);
       }
+    } else {
+      // If no history at all, start a new chat
+      startNewChat();
     }
   }, []);
 
   useEffect(() => {
-    localStorage.setItem('chatHistory', JSON.stringify(chatHistory));
+    if (chatHistory.length > 0) {
+      localStorage.setItem('chatHistory', JSON.stringify(chatHistory));
+    }
   }, [chatHistory]);
 
   useEffect(() => {
@@ -43,17 +54,18 @@ export default function Home() {
 
   const startNewChat = () => {
     const newChatId = Date.now().toString();
+    const newChat = { id: newChatId, summary: 'New Chat', messages: [] };
     setCurrentChatId(newChatId);
     setMessages([]);
     setInput('');
-    setChatHistory(prevHistory => [...prevHistory, { id: newChatId, summary: 'New Chat', messages: [] }]);
+    setChatHistory(prevHistory => [...prevHistory, newChat]);
   };
 
-  const updateChatHistory = (chatId, messages) => {
+  const updateChatHistory = (chatId, updatedMessages) => {
     setChatHistory(prevHistory =>
       prevHistory.map(chat =>
         chat.id === chatId
-          ? { ...chat, messages, summary: generateSummary(messages) }
+          ? { ...chat, messages: updatedMessages, summary: generateSummary(updatedMessages) }
           : chat
       )
     );
@@ -70,7 +82,9 @@ export default function Home() {
   const switchChat = (chatId) => {
     setCurrentChatId(chatId);
     const selectedChat = chatHistory.find(chat => chat.id === chatId);
-    setMessages(selectedChat.messages);
+    if (selectedChat) {
+      setMessages(selectedChat.messages);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -83,6 +97,9 @@ export default function Home() {
     const updatedMessages = [...messages, userMessage];
     setMessages(updatedMessages);
     setInput('');
+
+    // Ensure we're updating the correct chat in history
+    updateChatHistory(currentChatId, updatedMessages);
 
     try {
       const response = await fetch('/api/chat', {
@@ -116,14 +133,17 @@ export default function Home() {
 
         updatedMessages[updatedMessages.length - 1] = { role: 'assistant', content: receivedText };
         setMessages([...updatedMessages]);
-      }
 
-      updateChatHistory(currentChatId, updatedMessages);
+        // Update chat history with each chunk of the response
+        updateChatHistory(currentChatId, updatedMessages);
+      }
 
     } catch (error) {
       console.error('Error:', error);
       const errorMessage = { role: 'assistant', content: 'An error occurred while fetching the response.' };
-      setMessages((prevMessages) => [...prevMessages, errorMessage]);
+      const updatedMessagesWithError = [...updatedMessages, errorMessage];
+      setMessages(updatedMessagesWithError);
+      updateChatHistory(currentChatId, updatedMessagesWithError);
     } finally {
       setIsLoading(false);
     }
