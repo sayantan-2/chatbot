@@ -87,6 +87,20 @@ export default function Home() {
     }
   };
 
+  const deleteChat = (chatId) => {
+    setChatHistory(prevHistory => prevHistory.filter(chat => chat.id !== chatId));
+    if (currentChatId === chatId) {
+      const remainingChats = chatHistory.filter(chat => chat.id !== chatId);
+      if (remainingChats.length > 0) {
+        const latestChat = remainingChats[remainingChats.length - 1];
+        setCurrentChatId(latestChat.id);
+        setMessages(latestChat.messages);
+      } else {
+        startNewChat();
+      }
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!input.trim() || isLoading) return;
@@ -153,7 +167,13 @@ export default function Home() {
     <div className={styles.container}>
       <Header startNewChat={startNewChat} />
       <div className={styles.chatContainer}>
-        <ChatHistory chatHistory={chatHistory} switchChat={switchChat} currentChatId={currentChatId} startNewChat={startNewChat} />
+        <ChatHistory
+          chatHistory={chatHistory}
+          switchChat={switchChat}
+          currentChatId={currentChatId}
+          startNewChat={startNewChat}
+          deleteChat={deleteChat}
+        />
         <main className={styles.mainChat}>
           <ChatWindow messages={messages} isLoading={isLoading} />
           <InputForm
