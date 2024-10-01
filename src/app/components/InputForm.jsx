@@ -1,7 +1,7 @@
 // InputForm.jsx
 import { useState } from "react";
 import styles from "../styles/InputForm.module.css";
-import { Send } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 export default function InputForm({
   handleSubmit,
@@ -20,8 +20,10 @@ export default function InputForm({
         disabled={isLoading}
       />
       <button type="submit" className={styles.sendButton} disabled={isLoading}>
-        <Send size={20} />
+        <ArrowRight size={20} />
       </button>
     </form>
   );
 }
+
+// InputForm.module.css

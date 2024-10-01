@@ -1,4 +1,3 @@
-/* // InputForm.module.css */
 .inputForm {
   display: flex;
   padding: 0.5rem;
@@ -33,6 +32,11 @@
 
 .sendButton:hover {
   background-color: var(--secondary-color);
+}
+
+.sendButton:disabled {
+  background-color: var(--disabled-bg);
+  cursor: not-allowed;
 }
 
 @media (max-width: 768px) {
