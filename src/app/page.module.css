@@ -14,7 +14,7 @@
   justify-content: space-between;
   min-height: 100vh;
   padding: 2rem;
-  background-color: var(--background);
+  background-color: var(--background); /* Ensure this variable is defined */
   position: relative; /* For positioning the watermark */
 }
 
@@ -30,7 +30,7 @@
 
 .title {
   font-size: 2.5rem;
-  color: var(--foreground);
+  color: var(--foreground); /* Ensure this variable is defined */
 }
 
 /* New chat button */
@@ -138,6 +138,7 @@
   color: #fbfbfb;
   opacity: 0.7;
 }
+
 /* Watermark at the top left */
 .topLeftWatermark {
   position: absolute;
@@ -154,4 +155,138 @@
   ); /* Optional: Add a semi-transparent background */
   padding: 0.2rem 0.5rem; /* Optional: Add some padding */
   border-radius: 0.5rem; /* Optional: Round the corners */
+}
+/* Existing styles... */
+
+/* Markdown styling */
+.assistantMessage {
+  background-color: #333;
+  margin-right: auto;
+  color: white;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  line-height: 1.6;
+}
+
+.assistantMessage h1,
+.assistantMessage h2,
+.assistantMessage h3,
+.assistantMessage h4,
+.assistantMessage h5,
+.assistantMessage h6 {
+  margin-top: 24px;
+  margin-bottom: 16px;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.assistantMessage h1 {
+  font-size: 2em;
+  border-bottom: 1px solid #555;
+  padding-bottom: 0.3em;
+}
+.assistantMessage h2 {
+  font-size: 1.5em;
+  border-bottom: 1px solid #555;
+  padding-bottom: 0.3em;
+}
+.assistantMessage h3 {
+  font-size: 1.25em;
+}
+.assistantMessage h4 {
+  font-size: 1em;
+}
+.assistantMessage h5 {
+  font-size: 0.875em;
+}
+.assistantMessage h6 {
+  font-size: 0.85em;
+  color: #bbb;
+}
+
+.assistantMessage p {
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+
+.assistantMessage a {
+  color: #58a6ff;
+  text-decoration: none;
+}
+
+.assistantMessage a:hover {
+  text-decoration: underline;
+}
+
+.assistantMessage pre {
+  background-color: #1e1e1e;
+  border-radius: 6px;
+  padding: 16px;
+  overflow: auto;
+}
+
+.assistantMessage code {
+  background-color: rgba(110, 118, 129, 0.4);
+  border-radius: 6px;
+  padding: 0.2em 0.4em;
+  font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 85%;
+}
+
+.assistantMessage pre code {
+  background-color: transparent;
+  padding: 0;
+}
+
+.assistantMessage ul,
+.assistantMessage ol {
+  margin-top: 0;
+  margin-bottom: 16px;
+  padding-left: 2em;
+}
+
+.assistantMessage li {
+  margin-bottom: 4px;
+}
+
+.assistantMessage blockquote {
+  margin: 0 0 16px;
+  padding: 0 1em;
+  color: #bbb;
+  border-left: 0.25em solid #555;
+}
+
+.assistantMessage table {
+  border-collapse: collapse;
+  margin-bottom: 16px;
+  width: 100%;
+}
+
+.assistantMessage table th,
+.assistantMessage table td {
+  padding: 6px 13px;
+  border: 1px solid #555;
+}
+
+.assistantMessage table tr {
+  background-color: #2d2d2d;
+  border-top: 1px solid #555;
+}
+
+.assistantMessage table tr:nth-child(2n) {
+  background-color: #2a2a2a;
+}
+
+.assistantMessage hr {
+  height: 0.25em;
+  padding: 0;
+  margin: 24px 0;
+  background-color: #555;
+  border: 0;
+}
+
+.assistantMessage img {
+  max-width: 100%;
+  box-sizing: border-box;
 }

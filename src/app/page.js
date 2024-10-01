@@ -1,6 +1,8 @@
 'use client';
 
 import { useState } from 'react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import styles from './page.module.css';
 
 export default function Home() {
@@ -69,7 +71,6 @@ export default function Home() {
     }
   };
 
-
   return (
     <main className={styles.main}>
       <div className={styles.topLeftWatermark}>Version: 0.1.0 (Beta)</div>
@@ -82,7 +83,12 @@ export default function Home() {
       <div className={styles.chatWindow}>
         {messages.map((msg, index) => (
           <div key={index} className={`${styles.message} ${msg.role === 'user' ? styles.userMessage : styles.assistantMessage}`}>
-            <span>{msg.content}</span>
+            {msg.role === 'assistant' ? (
+              // Render Markdown for assistant messages
+              <ReactMarkdown remarkPlugins={[remarkGfm]}>{msg.content}</ReactMarkdown>
+            ) : (
+              <span>{msg.content}</span>
+            )}
           </div>
         ))}
         {isLoading && <div className={styles.loading}>Assistant is typing...</div>}
