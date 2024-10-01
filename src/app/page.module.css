@@ -1,9 +1,9 @@
-/* Home.module.css */
+/* page.module.css */
 
 .container {
   display: flex;
   flex-direction: column;
-  height: 100vh; /* Full viewport height */
+  min-height: 100vh; /* Changed from height to min-height for better responsiveness */
   background-color: var(--background);
   color: var(--foreground);
 }
@@ -11,7 +11,7 @@
 .chatContainer {
   display: flex;
   flex-grow: 1;
-  overflow: hidden; /* Prevent overflow from chat history or main chat area */
+  overflow: hidden;
 }
 
 .mainChat {
@@ -23,17 +23,28 @@
 
 @media (max-width: 768px) {
   .chatContainer {
-    flex-direction: column; /* Stack the sidebar and chat window vertically on smaller screens */
+    flex-direction: column;
   }
 
   .sidebar {
-    width: 100%; /* Sidebar takes full width on mobile */
+    width: 100%;
     border-right: none;
     border-bottom: 1px solid var(--primary-color);
-    max-height: 150px; /* Set a fixed height for the sidebar on smaller screens */
+    max-height: 150px;
+    overflow-y: auto; /* Allow scrolling in sidebar on mobile */
   }
 
   .message {
-    max-width: 90%; /* Adjust message width for smaller screens */
+    max-width: 90%;
+  }
+
+  .mainChat {
+    padding: 0.5rem; /* Reduce padding on smaller screens */
+  }
+}
+
+@media (max-width: 480px) {
+  .message {
+    max-width: 100%; /* Full width messages on very small screens */
   }
 }

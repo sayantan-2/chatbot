@@ -153,7 +153,7 @@ export default function Home() {
     <div className={styles.container}>
       <Header startNewChat={startNewChat} />
       <div className={styles.chatContainer}>
-        <ChatHistory chatHistory={chatHistory} switchChat={switchChat} currentChatId={currentChatId} />
+        <ChatHistory chatHistory={chatHistory} switchChat={switchChat} currentChatId={currentChatId} startNewChat={startNewChat} />
         <main className={styles.mainChat}>
           <ChatWindow messages={messages} isLoading={isLoading} />
           <InputForm
