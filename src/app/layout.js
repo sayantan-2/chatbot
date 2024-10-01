@@ -13,8 +13,8 @@ const geistMono = localFont({
 });
 
 export const metadata = {
-  title: "ChatBot",
-  description: "Simple chatbot. It's just a demo.",
+  title: "AI Assistant Chatbot",
+  description: "An interactive AI chatbot assistant.",
 };
 
 export default function RootLayout({ children }) {

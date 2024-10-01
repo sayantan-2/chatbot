@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import styles from './page.module.css';
@@ -9,6 +9,14 @@ export default function Home() {
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [chatHistory, setChatHistory] = useState([]);
+  const messagesEndRef = useRef(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(scrollToBottom, [messages]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -16,13 +24,11 @@ export default function Home() {
 
     setIsLoading(true);
 
-    // Add the user's message to the chat
     const userMessage = { role: 'user', content: input };
     setMessages((prevMessages) => [...prevMessages, userMessage]);
     setInput('');
 
     try {
-      // Make the API call with the user's message and chat history
       const response = await fetch('/api/chat', {
         method: 'POST',
         headers: {
@@ -30,7 +36,7 @@ export default function Home() {
         },
         body: JSON.stringify({
           message: input,
-          history: [...messages, userMessage], // Include all messages, including the user's new message
+          history: [...messages, userMessage],
         }),
       });
 
@@ -42,25 +48,24 @@ export default function Home() {
       const decoder = new TextDecoder();
       let receivedText = '';
 
-      // Add an empty assistant message first so it can be updated later with the streamed content
       const assistantMessage = { role: 'assistant', content: '' };
       setMessages((prevMessages) => [...prevMessages, assistantMessage]);
 
-      // Read the response stream chunk by chunk
       while (true) {
         const { value, done } = await reader.read();
         if (done) break;
 
-        // Decode the incoming chunk of data
         receivedText += decoder.decode(value, { stream: true });
 
-        // Update only the assistant's last message without removing previous messages
         setMessages((prevMessages) => {
           const updatedMessages = [...prevMessages];
-          updatedMessages[updatedMessages.length - 1] = { role: 'assistant', content: receivedText }; // Update the last message (assistant's)
+          updatedMessages[updatedMessages.length - 1] = { role: 'assistant', content: receivedText };
           return updatedMessages;
         });
       }
+
+      // Add the conversation to chat history
+      setChatHistory((prevHistory) => [...prevHistory, { id: Date.now(), preview: input.slice(0, 30) + '...' }]);
 
     } catch (error) {
       console.error('Error:', error);
@@ -71,44 +76,56 @@ export default function Home() {
     }
   };
 
+  const startNewChat = () => {
+    setMessages([]);
+    setInput('');
+  };
+
   return (
-    <main className={styles.main}>
-      <div className={styles.topLeftWatermark}>Version: 0.1.0 (Beta)</div>
-      <div className={styles.header}>
-        <h1 className={styles.title}>Chatbot</h1>
-        <button className={styles.newChatButton} onClick={() => setMessages([])}>
-          Start New Chat
+    <div className={styles.container}>
+      <header className={styles.header}>
+        <h1 className={styles.title}>AI Assistant</h1>
+        <button className={styles.newChatButton} onClick={startNewChat}>
+          New Chat
         </button>
-      </div>
-      <div className={styles.chatWindow}>
-        {messages.map((msg, index) => (
-          <div key={index} className={`${styles.message} ${msg.role === 'user' ? styles.userMessage : styles.assistantMessage}`}>
-            {msg.role === 'assistant' ? (
-              // Render Markdown for assistant messages
-              <ReactMarkdown remarkPlugins={[remarkGfm]}>{msg.content}</ReactMarkdown>
-            ) : (
-              <span>{msg.content}</span>
-            )}
+      </header>
+      <div className={styles.chatContainer}>
+        <aside className={styles.sidebar}>
+          <ul className={styles.chatHistory}>
+            {chatHistory.map((chat) => (
+              <li key={chat.id} className={styles.chatHistoryItem}>{chat.preview}</li>
+            ))}
+          </ul>
+        </aside>
+        <main className={styles.mainChat}>
+          <div className={styles.chatWindow}>
+            {messages.map((msg, index) => (
+              <div key={index} className={`${styles.message} ${msg.role === 'user' ? styles.userMessage : styles.assistantMessage}`}>
+                {msg.role === 'assistant' ? (
+                  <ReactMarkdown remarkPlugins={[remarkGfm]}>{msg.content}</ReactMarkdown>
+                ) : (
+                  <span>{msg.content}</span>
+                )}
+              </div>
+            ))}
+            {isLoading && <div className={styles.message}>Assistant is typing...</div>}
+            <div ref={messagesEndRef} />
           </div>
-        ))}
-        {isLoading && <div className={styles.loading}>Assistant is typing...</div>}
+          <form onSubmit={handleSubmit} className={styles.inputForm}>
+            <input
+              type="text"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              className={styles.input}
+              placeholder="Type your message..."
+              disabled={isLoading}
+            />
+            <button type="submit" className={styles.sendButton} disabled={isLoading}>
+              Send
+            </button>
+          </form>
+        </main>
       </div>
-      <form onSubmit={handleSubmit} className={styles.inputForm}>
-        <input
-          type="text"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          className={styles.input}
-          placeholder="Type your message..."
-          disabled={isLoading}
-        />
-        <button type="submit" className={styles.sendButton} disabled={isLoading}>
-          Send
-        </button>
-      </form>
-      <div className={styles.watermark}>
-        <a href="https://github.com/sayantan-2/chatbot" target="_blank" rel="noopener noreferrer">Sayantan</a>
-      </div>
-    </main>
+    </div>
   );
 }

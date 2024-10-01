@@ -1,12 +1,24 @@
+/* globals.css */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #ffffff; /* White background */
+  --foreground: #000000; /* Black text */
+  --chat-bg: #f0f0f0; /* Light gray for chat background */
+  --message-bg-user: #e0e0e0; /* Slightly darker gray for user message background */
+  --message-bg-assistant: #d0d0d0; /* Darker gray for assistant message background */
+  --primary-color: #000000; /* Black for primary elements */
+  --secondary-color: #808080; /* Gray for secondary elements */
 }
 
+/* dark mode (if needed, can skip this if always black-and-white) */
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #0a0a0a; /* Dark background */
+    --foreground: #ffffff; /* White text */
+    --chat-bg: #1a1a1a; /* Darker gray for chat background */
+    --message-bg-user: #2a2a2a; /* Dark gray for user message background */
+    --message-bg-assistant: #3a3a3a; /* Medium-dark gray for assistant message */
+    --primary-color: #ffffff; /* White for primary elements */
+    --secondary-color: #b0b0b0; /* Light gray for secondary elements */
   }
 }
 
@@ -19,7 +31,7 @@ body {
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
