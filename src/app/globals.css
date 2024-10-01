@@ -15,7 +15,7 @@
     --chat-bg: #1a1a1a; /* Darker gray for chat background */
     --message-bg-user: #2a2a2a; /* Dark gray for user message background */
     --message-bg-assistant: #3a3a3a; /* Medium-dark gray for assistant message */
-    --primary-color: #ffffff; /* White for primary elements */
+    --primary-color: #5e5e5e; /* White for primary elements */
     --secondary-color: #b0b0b0; /* Light gray for secondary elements */
   }
 }
