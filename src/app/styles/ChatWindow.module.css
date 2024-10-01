@@ -157,3 +157,38 @@
   max-width: 100%;
   box-sizing: border-box;
 }
+.copyButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background-color: var(--background);
+  color: var(--foreground);
+  border: 1px solid var(--primary-color);
+  border-radius: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 0.5rem;
+}
+
+.copyButton:hover {
+  background-color: var(--primary-color);
+  color: var(--background);
+}
+
+.copyButton svg {
+  transition: transform 0.3s ease;
+}
+
+.copyButton:hover svg {
+  transform: translateY(-1px);
+}
+
+@media (max-width: 768px) {
+  .copyButton {
+    font-size: 0.7rem;
+    padding: 0.2rem 0.4rem;
+  }
+}
