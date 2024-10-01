@@ -1,4 +1,3 @@
-/* globals.css */
 :root {
   --background: #ffffff; /* White background */
   --foreground: #000000; /* Black text */
@@ -9,7 +8,6 @@
   --secondary-color: #808080; /* Gray for secondary elements */
 }
 
-/* dark mode (if needed, can skip this if always black-and-white) */
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a; /* Dark background */
@@ -22,16 +20,22 @@
   }
 }
 
-html,
-body {
-  max-width: 100vw;
-  overflow-x: hidden;
+html {
+  font-size: 18px; /* Global font size */
+  @media (min-width: 768px) {
+    font-size: 18px; /* Adjust for larger devices */
+  }
+  @media (min-width: 1200px) {
+    font-size: 20px;
+  }
 }
 
 body {
   color: var(--foreground);
   background: var(--background);
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }

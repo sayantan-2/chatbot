@@ -1,0 +1,26 @@
+/* ChatHistory.module.css */
+.sidebar {
+  width: 250px;
+  background-color: var(--chat-bg);
+  padding: 1rem;
+  overflow-y: auto;
+  border-right: 1px solid var(--primary-color);
+}
+
+.chatHistory {
+  list-style-type: none;
+  padding: 0;
+}
+
+.chatHistoryItem {
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+  background-color: var(--message-bg-assistant);
+  border-radius: 0.3rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.chatHistoryItem:hover {
+  background-color: var(--message-bg-user);
+}

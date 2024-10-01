@@ -1,8 +1,11 @@
+// Home.js
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
+import { useState, useEffect } from 'react';
+import Header from './components/Header';
+import ChatHistory from './components/ChatHistory';
+import ChatWindow from './components/ChatWindow';
+import InputForm from './components/InputForm';
 import styles from './page.module.css';
 
 export default function Home() {
@@ -10,13 +13,65 @@ export default function Home() {
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [chatHistory, setChatHistory] = useState([]);
-  const messagesEndRef = useRef(null);
+  const [currentChatId, setCurrentChatId] = useState(null);
+  const [provider, setProvider] = useState('groq');
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  useEffect(() => {
+    const savedHistory = localStorage.getItem('chatHistory');
+    const savedCurrentChatId = localStorage.getItem('currentChatId');
+    if (savedHistory) {
+      setChatHistory(JSON.parse(savedHistory));
+    }
+    if (savedCurrentChatId) {
+      setCurrentChatId(savedCurrentChatId);
+      const selectedChat = JSON.parse(savedHistory).find(chat => chat.id === savedCurrentChatId);
+      if (selectedChat) {
+        setMessages(selectedChat.messages);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('chatHistory', JSON.stringify(chatHistory));
+  }, [chatHistory]);
+
+  useEffect(() => {
+    if (currentChatId) {
+      localStorage.setItem('currentChatId', currentChatId);
+    }
+  }, [currentChatId]);
+
+  const startNewChat = () => {
+    const newChatId = Date.now().toString();
+    setCurrentChatId(newChatId);
+    setMessages([]);
+    setInput('');
+    setChatHistory(prevHistory => [...prevHistory, { id: newChatId, summary: 'New Chat', messages: [] }]);
   };
 
-  useEffect(scrollToBottom, [messages]);
+  const updateChatHistory = (chatId, messages) => {
+    setChatHistory(prevHistory =>
+      prevHistory.map(chat =>
+        chat.id === chatId
+          ? { ...chat, messages, summary: generateSummary(messages) }
+          : chat
+      )
+    );
+  };
+
+  const generateSummary = (messages) => {
+    const firstUserMessage = messages.find(msg => msg.role === 'user');
+    if (firstUserMessage) {
+      return firstUserMessage.content.split(' ').slice(0, 5).join(' ') + '...';
+    }
+    return 'New Chat';
+  };
+
+  const switchChat = (chatId) => {
+    setCurrentChatId(chatId);
+    const selectedChat = chatHistory.find(chat => chat.id === chatId);
+    setMessages(selectedChat.messages);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -25,7 +80,8 @@ export default function Home() {
     setIsLoading(true);
 
     const userMessage = { role: 'user', content: input };
-    setMessages((prevMessages) => [...prevMessages, userMessage]);
+    const updatedMessages = [...messages, userMessage];
+    setMessages(updatedMessages);
     setInput('');
 
     try {
@@ -36,7 +92,8 @@ export default function Home() {
         },
         body: JSON.stringify({
           message: input,
-          history: [...messages, userMessage],
+          history: updatedMessages,
+          provider,
         }),
       });
 
@@ -49,7 +106,7 @@ export default function Home() {
       let receivedText = '';
 
       const assistantMessage = { role: 'assistant', content: '' };
-      setMessages((prevMessages) => [...prevMessages, assistantMessage]);
+      updatedMessages.push(assistantMessage);
 
       while (true) {
         const { value, done } = await reader.read();
@@ -57,15 +114,11 @@ export default function Home() {
 
         receivedText += decoder.decode(value, { stream: true });
 
-        setMessages((prevMessages) => {
-          const updatedMessages = [...prevMessages];
-          updatedMessages[updatedMessages.length - 1] = { role: 'assistant', content: receivedText };
-          return updatedMessages;
-        });
+        updatedMessages[updatedMessages.length - 1] = { role: 'assistant', content: receivedText };
+        setMessages([...updatedMessages]);
       }
 
-      // Add the conversation to chat history
-      setChatHistory((prevHistory) => [...prevHistory, { id: Date.now(), preview: input.slice(0, 30) + '...' }]);
+      updateChatHistory(currentChatId, updatedMessages);
 
     } catch (error) {
       console.error('Error:', error);
@@ -76,54 +129,21 @@ export default function Home() {
     }
   };
 
-  const startNewChat = () => {
-    setMessages([]);
-    setInput('');
-  };
-
   return (
     <div className={styles.container}>
-      <header className={styles.header}>
-        <h1 className={styles.title}>AI Assistant</h1>
-        <button className={styles.newChatButton} onClick={startNewChat}>
-          New Chat
-        </button>
-      </header>
+      <Header startNewChat={startNewChat} />
       <div className={styles.chatContainer}>
-        <aside className={styles.sidebar}>
-          <ul className={styles.chatHistory}>
-            {chatHistory.map((chat) => (
-              <li key={chat.id} className={styles.chatHistoryItem}>{chat.preview}</li>
-            ))}
-          </ul>
-        </aside>
+        <ChatHistory chatHistory={chatHistory} switchChat={switchChat} currentChatId={currentChatId} />
         <main className={styles.mainChat}>
-          <div className={styles.chatWindow}>
-            {messages.map((msg, index) => (
-              <div key={index} className={`${styles.message} ${msg.role === 'user' ? styles.userMessage : styles.assistantMessage}`}>
-                {msg.role === 'assistant' ? (
-                  <ReactMarkdown remarkPlugins={[remarkGfm]}>{msg.content}</ReactMarkdown>
-                ) : (
-                  <span>{msg.content}</span>
-                )}
-              </div>
-            ))}
-            {isLoading && <div className={styles.message}>Assistant is typing...</div>}
-            <div ref={messagesEndRef} />
-          </div>
-          <form onSubmit={handleSubmit} className={styles.inputForm}>
-            <input
-              type="text"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              className={styles.input}
-              placeholder="Type your message..."
-              disabled={isLoading}
-            />
-            <button type="submit" className={styles.sendButton} disabled={isLoading}>
-              Send
-            </button>
-          </form>
+          <ChatWindow messages={messages} isLoading={isLoading} />
+          <InputForm
+            handleSubmit={handleSubmit}
+            input={input}
+            setInput={setInput}
+            isLoading={isLoading}
+            provider={provider}
+            setProvider={setProvider}
+          />
         </main>
       </div>
     </div>

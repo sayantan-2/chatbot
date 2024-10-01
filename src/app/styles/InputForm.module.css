@@ -1,0 +1,43 @@
+/* InputForm.module.css */
+.inputForm {
+  display: flex;
+  padding: 1rem;
+  background-color: var(--chat-bg);
+  border-top: 1px solid var(--primary-color);
+}
+
+.input {
+  flex-grow: 1;
+  padding: 0.8rem;
+  border: 1px solid var(--primary-color);
+  border-radius: 0.5rem 0 0 0.5rem;
+  font-size: 1rem;
+  background-color: var(--background);
+  color: var(--foreground);
+}
+
+.sendButton {
+  padding: 0.8rem 1.2rem;
+  background-color: var(--primary-color);
+  color: var(--background);
+  border: none;
+  border-radius: 0 0.5rem 0.5rem 0;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+.sendButton:hover {
+  background-color: var(--secondary-color);
+}
+
+.providerDropdown {
+  margin-right: 1rem;
+  padding: 0.8rem;
+  border: 1px solid var(--primary-color);
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  background-color: var(--background);
+  color: var(--foreground);
+}

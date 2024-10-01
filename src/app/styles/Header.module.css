@@ -1,0 +1,31 @@
+/* Header.module.css */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: var(--primary-color);
+  color: var(--background);
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.newChatButton {
+  background-color: var(--secondary-color);
+  color: var(--background);
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.newChatButton:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+}
