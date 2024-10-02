@@ -192,3 +192,83 @@
     padding: 0.2rem 0.4rem;
   }
 }
+/* ChatWindow.module.css */
+/* ... (keep all existing styles) ... */
+
+.codeBlockWrapper {
+  position: relative;
+  margin: 1rem 0;
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.codeBlockWrapper pre {
+  margin: 0 !important;
+  border-radius: 0.5rem;
+}
+
+.codeBlockCopyButton {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.codeBlockCopyButton:hover {
+  background-color: rgba(255, 255, 255, 0.2) !important;
+  color: white !important;
+}
+
+.codeBlockWrapper:hover .codeBlockCopyButton {
+  opacity: 1;
+}
+
+.inlineCode {
+  background-color: var(--message-bg-assistant);
+  padding: 0.2em 0.4em;
+  border-radius: 0.25rem;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 0.875em;
+}
+
+/* Override default styles for better dark theme compatibility */
+.message pre {
+  background-color: transparent !important;
+  padding: 0 !important;
+}
+
+/* Update existing copyButton styles */
+.copyButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background-color: var(--background);
+  color: var(--foreground);
+  border: 1px solid var(--primary-color);
+  border-radius: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 0.5rem;
+}
+
+.copyButton:hover {
+  background-color: var(--primary-color);
+  color: var(--background);
+}
+
+.copyButton svg {
+  transition: transform 0.3s ease;
+}
+
+.copyButton:hover svg {
+  transform: translateY(-1px);
+}
